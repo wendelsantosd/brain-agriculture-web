@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Layout } from "../shared/layout/Layout";
-import { Dashboard } from "../pages/dashboard";
+import { Dashboard } from "../pages/Dashboard/Dashboard";
 
 export const ReactRoutes = () => <Router>
   <Routes>

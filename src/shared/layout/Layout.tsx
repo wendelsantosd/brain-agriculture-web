@@ -7,7 +7,9 @@ export const Layout = (): React.ReactElement => {
     <Sidebar />
     <div className='flex-1'>
       <Header />
-      <div>{<Outlet />}</div>
+      <div className="flex-1 p-4 min-h-0 overflow-auto">
+        {<Outlet />}
+      </div>
     </div>
   </div>
 }
