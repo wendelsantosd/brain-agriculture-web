@@ -1,10 +1,11 @@
+import React from "react"
+import { BrainAgricultureProviderContext } from "./context/brainAgricultureProvider"
 import { ReactRoutes } from "./routes"
 
-function App() {
+export const App = (): React.ReactElement => {
 
-  return (
-    <ReactRoutes />
-  )
+  return <BrainAgricultureProviderContext>
+      <ReactRoutes />
+  </BrainAgricultureProviderContext>
+
 }
-
-export default App

@@ -7,9 +7,10 @@ type IHttpDTO = {
 };
 
 export const makeHttp = ({
-  baseURL = process.env.REACT_APP_API_URL,
+  baseURL = import.meta.env.VITE_REACT_APP_API_URL,
   headers = {},
 }: IHttpDTO = {}): HttpClient => {
+  
   const request = axios.create({
     baseURL,
     headers: {
