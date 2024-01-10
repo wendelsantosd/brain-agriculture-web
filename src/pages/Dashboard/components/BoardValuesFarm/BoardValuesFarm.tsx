@@ -1,7 +1,7 @@
 import { IoGolf, IoPieChart } from "react-icons/io5"
-import { BoxWrapperProps } from "./interface"
+import { BoardValuesFarmProps, BoxWrapperProps } from "./interface"
 
-export const BoardValuesFarm = (): React.ReactElement => {
+export const BoardValuesFarm = ({ totalArea, totalFarms }: BoardValuesFarmProps): React.ReactElement => {
 
   return <div className="flex gap-4">
     <BoxWrapper>
@@ -11,7 +11,7 @@ export const BoardValuesFarm = (): React.ReactElement => {
       <div className="pl-4">
         <span className="text-sm text-gray-500 font-light">Quantidade total de fazendas</span>
         <div className="flex items-center">
-          <strong className="text-xl text-gray-700 font-semibold">10</strong>
+          <strong className="text-xl text-gray-700 font-semibold">{totalFarms ?? 0}</strong>
           <span className="text-sm text-gray-500 pl-2">unidade(s)</span>
         </div>
       </div>
@@ -23,7 +23,7 @@ export const BoardValuesFarm = (): React.ReactElement => {
       <div className="pl-4">
         <span className="text-sm text-gray-500 font-light">Área total de fazendas</span>
         <div className="flex items-center">
-          <strong className="text-xl text-gray-700 font-semibold">10000</strong>
+          <strong className="text-xl text-gray-700 font-semibold">{totalArea ?? 0}</strong>
           <span className="text-sm text-gray-500 pl-2">hectare(s)</span>
         </div>
       </div>
