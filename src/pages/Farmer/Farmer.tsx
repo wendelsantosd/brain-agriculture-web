@@ -1,4 +1,77 @@
+import { useEffect, useState } from "react"
+import { IFarmer } from "../../services/api/farmer/protocols/getFarmers"
+import { getFarmers } from "../../services/api/farmer/useCases/getFarmers"
+import { formatBrazilianEIN, formatBrazilianSSN } from "../../shared/helpers/format/document"
 
 export const Farmer = (): React.ReactElement => {
-  return <div>Farmer</div>
+  const [data, setData] = useState<IFarmer[]>()
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    handleGetFarmers()
+  }, [])
+
+  const handleGetFarmers = async () => {
+    try {
+      setLoading(true);
+      const response = await getFarmers();
+      setData(response.farmers);
+      setLoading(false);
+    } catch (error) {
+      console.log('Deu ruim.')
+    }
+  }
+
+  return <div className="bg-white rounded-sm p-4 flex-1 border border-gray-200 flex items-center">
+    <div className="flex flex-row gap-4 w-full">
+      <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1">
+        <strong className="text-gray-700 font-medium">Produtores</strong>
+        <div className="border-x border-gray-200 rounded-sm mt-3">
+          <table className="w-full text-gray-700">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Cpf/Cnpj</th>
+                <th>Nome da fazenda</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>Área total (ha)</th>
+                <th>Área de agricultura (ha)</th>
+                <th>Área de vegetação (ha)</th>
+                <th>Culturas plantadas</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.name}</td>
+                  <td>{item.cpfCnpj.length === 11 ? formatBrazilianSSN(item.cpfCnpj) : formatBrazilianEIN(item.cpfCnpj)}</td>
+                  <td>{item.farmName}</td>
+                  <td>{item.city}</td>
+                  <td>{item.state}</td>
+                  <td>{item.totalArea}</td>
+                  <td>{item.agriculturalArea}</td>
+                  <td>{item.vegetationArea}</td>
+                  <td>{item.plantedCrops.map((crop, index) => {
+                    if (index === item.plantedCrops.length - 1) return `${crop}.`
+                    return `${crop},`
+                  })}
+                  </td>
+                  <td>
+                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
+                      Editar
+                    </button>
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 }
