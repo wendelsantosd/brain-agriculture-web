@@ -1,13 +1,6 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts'
-
-const data = [
-  { name: 'Male', value: 540 },
-  { name: 'Female', value: 620 },
-  { name: 'Other', value: 210 }
-]
-
-const RADIAN = Math.PI / 180
-const COLORS = ['#00C49F', '#FFBB28', '#FF8042']
+import { PizzasChartsProps } from './interface'
+import { COLORS, RADIAN } from './constants'
 
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5
@@ -20,9 +13,11 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
     </text>
   )
 }
-export const PizzasCharts = (): React.ReactElement => {
+export const PizzasCharts = ({ data, title }: PizzasChartsProps): React.ReactElement => {
+
+
   return <div className="w-[33rem] h-[30rem] bg-white p-4 rounded-sm border border-gray-200 flex flex-col">
-    <strong className="text-gray-700 font-medium">Buyer Profile</strong>
+    <strong className="text-gray-700 font-medium">{title}</strong>
     <div className="mt-3 w-full flex-1 text-xs">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart width={400} height={300}>
@@ -36,7 +31,7 @@ export const PizzasCharts = (): React.ReactElement => {
             fill="#8884d8"
             dataKey="value"
           >
-            {data.map((_, index) => (
+            {data?.map((_, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
