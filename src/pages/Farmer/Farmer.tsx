@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { IFarmer } from "../../services/api/farmer/protocols/getFarmers"
 import { getFarmers } from "../../services/api/farmer/useCases/getFarmers"
 import { formatBrazilianEIN, formatBrazilianSSN } from "../../shared/helpers/format/document"
@@ -7,11 +7,14 @@ import { ICreateFarmerRequest } from "../../services/api/farmer/protocols/create
 import { ToastContainer, toast } from 'react-toastify';
 import { createFarmer } from "../../services/api/farmer/useCases/createFarmer"
 import { Loading } from "../../shared/components/Loading/Loading"
+import { CreateBrainAgricultureContext } from "../../context/contex"
+import { getDashboardValues } from "../../services/api/farmer/useCases/getDashboardValues"
 
 export const Farmer = (): React.ReactElement => {
   const [data, setData] = useState<IFarmer[]>()
   const [openModal, setIsOpenModal] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
+  const { setDashboardValues } = useContext(CreateBrainAgricultureContext)
 
   useEffect(() => {
     handleGetFarmers()
@@ -38,6 +41,8 @@ export const Farmer = (): React.ReactElement => {
       toast.success(response.message);
       setIsOpenModal(false)
       await handleGetFarmers()
+      const data = await getDashboardValues();
+      setDashboardValues && setDashboardValues(data);
     } catch (error) {
       toast.error('Erro ao adicionar produtor')
       setLoading(false)

@@ -1,10 +1,11 @@
 import React from 'react';
 
 interface BrainAgricultureContextTypes {
-  dashboardValues?: IDashBoardValues;
+  dashboardValues?: IDashboardValues;
+  setDashboardValues?: React.Dispatch<React.SetStateAction<IDashboardValues>>;
 }
 
-export interface IDashBoardValues {
+export interface IDashboardValues {
   totalFarms: number;
   totalArea: number;
   totalPerState: {
@@ -50,7 +51,7 @@ export interface IDashBoardValues {
 }
 
 const defaultValuesBrainAgriculture = {
-  dashboardValues: {} as IDashBoardValues
+  dashboardValues: {} as IDashboardValues
 };
 
 export const CreateBrainAgricultureContext =

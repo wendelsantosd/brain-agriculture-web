@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode } from 'react';
-import { CreateBrainAgricultureContext, IDashBoardValues } from './contex';
+import { CreateBrainAgricultureContext, IDashboardValues } from './contex';
 import { getDashboardValues } from '../services/api/farmer/useCases/getDashboardValues';
 import { Loading } from '../shared/components/Loading/Loading';
 
@@ -9,14 +9,14 @@ type Props = {
 
 export const BrainAgricultureProviderContext = ({ children }: Props): JSX.Element => {
   const [loading, setLoading] = useState(true);
-  const [dashboardValues, setDashBoardValues] = useState<IDashBoardValues>(
-    {} as IDashBoardValues,
+  const [dashboardValues, setDashboardValues] = useState<IDashboardValues>(
+    {} as IDashboardValues,
   );
 
   const fetchDashboardValues = async () => {
     try {
       const data = await getDashboardValues();
-      setDashBoardValues(data);
+      setDashboardValues(data);
       return;
     } catch (error) {
       return {};
@@ -32,7 +32,8 @@ export const BrainAgricultureProviderContext = ({ children }: Props): JSX.Elemen
   return (
     <CreateBrainAgricultureContext.Provider
       value={{
-        dashboardValues
+        dashboardValues,
+        setDashboardValues
       }}
     >
       <div style={{ position: 'relative' }}>
