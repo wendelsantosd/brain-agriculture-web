@@ -147,7 +147,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
 
             <div className="mb-4">
               <label htmlFor="totalArea" className="block text-gray-700 text-sm font-bold mb-2">
-                Área total:
+                Área total (ha):
               </label>
               <input
                 id="totalArea"
@@ -165,7 +165,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
 
             <div className="mb-4">
               <label htmlFor="agriculturalArea" className="block text-gray-700 text-sm font-bold mb-2">
-                Área de agricultura:
+                Área de agricultura (ha):
               </label>
               <input
                 id="agriculturalArea"
@@ -183,7 +183,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
 
             <div className="mb-4">
               <label htmlFor="vegetationArea" className="block text-gray-700 text-sm font-bold mb-2">
-                Área de vegetação:
+                Área de vegetação (ha):
               </label>
               <input
                 id="vegetationArea"
