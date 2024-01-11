@@ -1,4 +1,4 @@
-import { HiOutlineViewGrid } from 'react-icons/hi'
+import { HiOutlineViewGrid, HiUserGroup } from 'react-icons/hi'
 
 export const DASHBOARD_SIDEBAR_LINKS = [
 	{
@@ -6,5 +6,11 @@ export const DASHBOARD_SIDEBAR_LINKS = [
 		label: 'Dashboard',
 		path: '/',
 		icon: <HiOutlineViewGrid />
+	},
+	{
+		key: 'farmer',
+		label: 'Produtores',
+		path: '/farmer',
+		icon: <HiUserGroup />
 	}
 ]
