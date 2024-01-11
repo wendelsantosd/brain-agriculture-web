@@ -34,7 +34,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading, id, farmer }
             <p className="text-center text-lg font-medium text-gray-600 mb-4">{!isEdit ? 'Cadastrar' : 'Editar'}</p>
 
             <div className="mb-4">
-              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2" onClick={() => console.log(formData)}>
+              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
                 Nome:
               </label>
               <input

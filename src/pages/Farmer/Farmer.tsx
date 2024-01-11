@@ -45,7 +45,7 @@ export const Farmer = (): React.ReactElement => {
       onClose();
       setDashboardValues && setDashboardValues(data);
     } catch (error) {
-      toast.error('Erro ao adicionar produtor')
+      id === '' ? toast.error('Erro ao adicionar produtor') : toast.error('Erro ao alterar produtor')
       onClose()
     }
   };
