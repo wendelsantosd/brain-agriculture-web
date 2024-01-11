@@ -123,7 +123,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading, id, farmer }
                 }}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
               >
-                <option value="" disabled>
+                <option value="" disabled selected>
                   Selecione um estado
                 </option>
                 {OPTIONS.map(option => <option key={option.value} value={option.value} selected={formData.state === option.value}>{option.label}</option>)}
@@ -230,7 +230,11 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading, id, farmer }
               <button
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
-                onClick={() => action(formData)}
+                onClick={() => {
+                  action(formData);
+                  setFormData({ plantedCrops: [] as string[] } as IFarmer);
+                  setControllerCheckedCrop([]);
+                }}
                 disabled={loading}
               >
                 {!isEdit ? 'Cadastrar' : 'Editar'}
@@ -241,6 +245,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading, id, farmer }
                 onClick={() => {
                   onClose();
                   setFormData({ plantedCrops: [] as string[] } as IFarmer);
+                  setControllerCheckedCrop([]);
                 }}
                 disabled={loading}
               >
