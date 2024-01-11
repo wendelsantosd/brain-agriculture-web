@@ -10,6 +10,7 @@ import { CreateBrainAgricultureContext } from "../../context/contex"
 import { getDashboardValues } from "../../services/api/farmer/useCases/getDashboardValues"
 import { getFarmerById } from "../../services/api/farmer/useCases/getFarmerById"
 import { updateFarmer } from "../../services/api/farmer/useCases/updateFarmer"
+import { deleteFarmer } from "../../services/api/farmer/useCases/deleteFarmer"
 
 export const Farmer = (): React.ReactElement => {
   const [data, setData] = useState<IFarmer[]>()
@@ -39,11 +40,11 @@ export const Farmer = (): React.ReactElement => {
     try {
       setLoading(true);
       const response = id === '' ? await createFarmer(formData) : await updateFarmer({ id, farmerData: formData });
-      toast.success(response.message);
       await handleGetFarmers()
       const data = await getDashboardValues();
-      onClose();
       setDashboardValues && setDashboardValues(data);
+      onClose();
+      toast.success(response.message);
     } catch (error) {
       id === '' ? toast.error('Erro ao adicionar produtor') : toast.error('Erro ao alterar produtor')
       onClose()
@@ -59,6 +60,20 @@ export const Farmer = (): React.ReactElement => {
     } catch (error) {
       toast.error('Ocorreu um erro ao carregar os dados do produtor')
       onClose()
+    }
+  }
+
+  const handleDeleteFarmer = async (id: string) => {
+    try {
+      setLoading(true);
+      const response = await deleteFarmer({ id });
+      await handleGetFarmers()
+      const data = await getDashboardValues();
+      setDashboardValues && setDashboardValues(data);
+      setLoading(false);
+      toast.success(response.message);
+    } catch (error) {
+      toast.error('Ocorreu um erro ao deletar usuário')
     }
   }
 
@@ -119,7 +134,9 @@ export const Farmer = (): React.ReactElement => {
                       }}>
                         Editar
                       </button>
-                      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={async () => {
+                        await handleDeleteFarmer(item.id)
+                      }}>
                         Excluir
                       </button>
                     </td>
