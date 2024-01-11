@@ -14,6 +14,10 @@ Brain Agriculture Web
 
 </div>
 
+<div align="center">
+<img src="https://ibb.co/1zDcgvF">
+</div>
+
 # Overview
 
 "Brain Agriculture" is an API for registering agricultural producers and their farms. The platform was built using React.js with Typescript and Tailwindcss.
