@@ -15,7 +15,7 @@ Brain Agriculture Web
 </div>
 
 <div align="center">
-<img src="https://ibb.co/1zDcgvF">
+<img src="https://i.ibb.co/sW07fm8/Screenshot-from-2024-01-11-11-13-24.png">
 </div>
 
 # Overview
