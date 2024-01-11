@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
 import { IFarmer } from "../../services/api/farmer/protocols/getFarmers"
 import { getFarmers } from "../../services/api/farmer/useCases/getFarmers"
 import { formatBrazilianEIN, formatBrazilianSSN } from "../../shared/helpers/format/document"
 import { ModalFormFarmer } from "./components/ModalFormFormer/ModalFormFarmer"
+import { ICreateFarmerRequest } from "../../services/api/farmer/protocols/createFarmer"
+import { ToastContainer, toast } from 'react-toastify';
+import { createFarmer } from "../../services/api/farmer/useCases/createFarmer"
+import { Loading } from "../../shared/components/Loading/Loading"
 
 export const Farmer = (): React.ReactElement => {
   const [data, setData] = useState<IFarmer[]>()
-  const [openModal, setIsOpenModal] = useState<boolean>()
+  const [openModal, setIsOpenModal] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -19,10 +23,27 @@ export const Farmer = (): React.ReactElement => {
       const response = await getFarmers();
       setData(response.farmers);
       setLoading(false);
+      setIsOpenModal(false);
     } catch (error) {
-      console.log('Deu ruim.')
+      toast.error('Erro ao listar produtores')
     }
   }
+
+  const handleSubmit = async (formData: ICreateFarmerRequest) => {
+    try {
+      setLoading(true);
+      const response = await createFarmer(formData);
+      console.log(response.message)
+      setLoading(false);
+      toast.success(response.message);
+      setIsOpenModal(false)
+      await handleGetFarmers()
+    } catch (error) {
+      toast.error('Erro ao adicionar produtor')
+      setLoading(false)
+      setIsOpenModal(false)
+    }
+  };
 
   return <>
     <div className="bg-white rounded-sm p-4 flex-1 border border-gray-200 flex items-center">
@@ -82,9 +103,13 @@ export const Farmer = (): React.ReactElement => {
         </div>
       </div>
     </div>
-    <ModalFormFarmer 
+    <ModalFormFarmer
       isOpen={openModal}
       onClose={() => setIsOpenModal(false)}
+      action={handleSubmit}
+      loading={loading}
     />
+    <ToastContainer />
+    {loading && <Loading />}
   </>
 }

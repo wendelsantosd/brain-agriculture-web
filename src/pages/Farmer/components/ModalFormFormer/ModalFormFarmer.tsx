@@ -1,22 +1,19 @@
 import { useState } from 'react';
 import { ModalFormFarmerProps } from './interface';
 import { IFarmer } from '../../../../services/api/farmer/protocols/getFarmers';
+import { ICreateFarmerRequest } from '../../../../services/api/farmer/protocols/createFarmer';
+import { Loading } from '../../../../shared/components/Loading/Loading';
 
-export const ModalFormFarmer = ({ isOpen, onClose }: ModalFormFarmerProps) => {
-
-  const [formData, setFormData] = useState<IFarmer>({
+export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormFarmerProps) => {
+  const [formData, setFormData] = useState<ICreateFarmerRequest>({
     plantedCrops: [] as string[]
   } as IFarmer);
-
-  const handleSubmit = () => {
-    console.log(formData);
-  };
 
   if (!isOpen) {
     return null;
   }
 
-  return (
+  return <>
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity">
@@ -238,16 +235,18 @@ export const ModalFormFarmer = ({ isOpen, onClose }: ModalFormFarmerProps) => {
 
             <div className="flex items-center justify-between">
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
-                onClick={handleSubmit}
+                onClick={() => action(formData)}
+                disabled={loading}
               >
                 Cadastrar
               </button>
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
                 onClick={onClose}
+                disabled={loading}
               >
                 Cancelar
               </button>
@@ -256,5 +255,6 @@ export const ModalFormFarmer = ({ isOpen, onClose }: ModalFormFarmerProps) => {
         </div>
       </div >
     </div >
-  );
+    {loading && <Loading />}
+  </>
 };

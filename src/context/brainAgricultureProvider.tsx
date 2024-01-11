@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactNode } from 'react';
 import { CreateBrainAgricultureContext, IDashBoardValues } from './contex';
 import { getDashboardValues } from '../services/api/farmer/useCases/getDashboardValues';
+import { Loading } from '../shared/components/Loading/Loading';
 
 type Props = {
   children: ReactNode
@@ -36,7 +37,7 @@ export const BrainAgricultureProviderContext = ({ children }: Props): JSX.Elemen
     >
       <div style={{ position: 'relative' }}>
         {children}
-        {loading && <div>LOADING</div>}
+        {loading && <Loading />}
       </div>
     </CreateBrainAgricultureContext.Provider>
   );

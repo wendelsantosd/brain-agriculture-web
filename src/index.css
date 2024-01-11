@@ -25,3 +25,14 @@
 		@apply text-sky-500 hover:underline;
 	}
 }
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  border-top-color: #2ecc71;
+  animation: spin 1s linear infinite;
+}
