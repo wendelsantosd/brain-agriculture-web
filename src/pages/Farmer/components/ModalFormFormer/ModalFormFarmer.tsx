@@ -1,13 +1,20 @@
-import { useState } from 'react';
-import { ModalFormFarmerProps } from './interface';
+import { useEffect, useState } from 'react';
+import { ModalFormFarmerProps, StateEnum } from './interface';
 import { IFarmer } from '../../../../services/api/farmer/protocols/getFarmers';
-import { ICreateFarmerRequest } from '../../../../services/api/farmer/protocols/createFarmer';
 import { Loading } from '../../../../shared/components/Loading/Loading';
+import { OPTIONS } from './constants';
 
-export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormFarmerProps) => {
-  const [formData, setFormData] = useState<ICreateFarmerRequest>({
+export const ModalFormFarmer = ({ isOpen, onClose, action, loading, id, farmer }: ModalFormFarmerProps) => {
+  const [formData, setFormData] = useState<IFarmer>({
     plantedCrops: [] as string[]
   } as IFarmer);
+  const [controllerCheckedCrop, setControllerCheckedCrop] = useState<string[]>([])
+  const isEdit = id !== '';
+
+  useEffect(() => {
+    farmer && setFormData({ ...farmer, state: StateEnum[farmer.state as keyof typeof StateEnum] });
+    farmer && setControllerCheckedCrop(farmer.plantedCrops);
+  }, [farmer])
 
   if (!isOpen) {
     return null;
@@ -24,16 +31,17 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
 
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-full sm:max-w-md">
           <form className="max-w-md mx-auto p-4">
-            <p className="text-center text-lg font-medium text-gray-600 mb-4">Cadastrar</p>
+            <p className="text-center text-lg font-medium text-gray-600 mb-4">{!isEdit ? 'Cadastrar' : 'Editar'}</p>
 
             <div className="mb-4">
-              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2" onClick={() => console.log(formData)}>
                 Nome:
               </label>
               <input
                 id="name"
                 type="text"
                 name="name"
+                defaultValue={formData.name}
                 onChange={e => {
                   const _formData = formData;
                   _formData.name = e.target.value;
@@ -52,6 +60,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                 id="document"
                 type="text"
                 name="document"
+                defaultValue={formData.cpfCnpj}
                 onChange={e => {
                   const _formData = formData;
                   _formData.cpfCnpj = e.target.value;
@@ -70,6 +79,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                 id="farmName"
                 name="farmName"
                 type="text"
+                defaultValue={formData.farmName}
                 onChange={e => {
                   const _formData = formData;
                   _formData.farmName = e.target.value;
@@ -88,6 +98,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                 id="city"
                 name="city"
                 type="text"
+                defaultValue={formData.city}
                 onChange={e => {
                   const _formData = formData;
                   _formData.city = e.target.value;
@@ -112,36 +123,10 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                 }}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Selecione um estado
                 </option>
-                <option value="AC">Acre</option>
-                <option value="AL">Alagoas</option>
-                <option value="AP">Amapá</option>
-                <option value="AM">Amazonas</option>
-                <option value="BA">Bahia</option>
-                <option value="CE">Ceará</option>
-                <option value="DF">Distrito Federal</option>
-                <option value="ES">Espírito Santo</option>
-                <option value="GO">Goiás</option>
-                <option value="MA">Maranhão</option>
-                <option value="MT">Mato Grosso</option>
-                <option value="MS">Mato Grosso do Sul</option>
-                <option value="MG">Minas Gerais</option>
-                <option value="PA">Pará</option>
-                <option value="PB">Paraíba</option>
-                <option value="PR">Paraná</option>
-                <option value="PE">Pernambuco</option>
-                <option value="PI">Piauí</option>
-                <option value="RJ">Rio de Janeiro</option>
-                <option value="RN">Rio Grande do Norte</option>
-                <option value="RS">Rio Grande do Sul</option>
-                <option value="RO">Rondônia</option>
-                <option value="RR">Roraima</option>
-                <option value="SC">Santa Catarina</option>
-                <option value="SP">São Paulo</option>
-                <option value="SE">Sergipe</option>
-                <option value="TO">Tocantins</option>
+                {OPTIONS.map(option => <option key={option.value} value={option.value} selected={formData.state === option.value}>{option.label}</option>)}
               </select>
             </div>
 
@@ -153,6 +138,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                 id="totalArea"
                 name="totalArea"
                 type="number"
+                defaultValue={formData.totalArea}
                 onChange={e => {
                   const _formData = formData;
                   _formData.totalArea = +e.target.value;
@@ -171,6 +157,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                 id="agriculturalArea"
                 name="agriculturalArea"
                 type="number"
+                defaultValue={formData.agriculturalArea}
                 onChange={e => {
                   const _formData = formData;
                   _formData.agriculturalArea = +e.target.value;
@@ -189,6 +176,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                 id="vegetationArea"
                 name="vegetationArea"
                 type="number"
+                defaultValue={formData.vegetationArea}
                 onChange={e => {
                   const _formData = formData;
                   _formData.vegetationArea = +e.target.value;
@@ -204,7 +192,7 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                 Culturas plantadas:
               </label>
               <div className="flex flex-col">
-                {['Soja', 'Milho', 'Algodão', 'Café', 'Cana de Açucar'].map((crop) => (
+                {['Soja', 'Milho', 'Algodão', 'Café', 'Cana de Açucar'].map((crop) =>
                   <label key={crop} className="inline-flex items-center">
                     <input
                       type="checkbox"
@@ -216,20 +204,25 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                         if (isChecked) {
                           const _formData = formData;
                           _formData.plantedCrops.push(e.target.value);
+                          setControllerCheckedCrop([...controllerCheckedCrop, e.target.value]);
                           setFormData(_formData);
                         } else {
                           const _formData = formData;
                           formData.plantedCrops = formData.plantedCrops.filter(
                             (selectedCrop) => selectedCrop !== e.target.value
                           );
+                          setControllerCheckedCrop(controllerCheckedCrop.filter(
+                            (selectedCrop) => selectedCrop !== e.target.value
+                          ))
                           setFormData(_formData);
                         }
                       }}
+                      checked={controllerCheckedCrop?.some(value => crop === value)}
                       className="form-checkbox h-5 w-5 text-green-500"
                     />
                     <span className="ml-2 text-gray-700">{crop}</span>
                   </label>
-                ))}
+                )}
               </div>
             </div>
 
@@ -240,12 +233,15 @@ export const ModalFormFarmer = ({ isOpen, onClose, action, loading }: ModalFormF
                 onClick={() => action(formData)}
                 disabled={loading}
               >
-                Cadastrar
+                {!isEdit ? 'Cadastrar' : 'Editar'}
               </button>
               <button
                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  setFormData({ plantedCrops: [] as string[] } as IFarmer);
+                }}
                 disabled={loading}
               >
                 Cancelar

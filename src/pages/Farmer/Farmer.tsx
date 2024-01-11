@@ -3,18 +3,21 @@ import { IFarmer } from "../../services/api/farmer/protocols/getFarmers"
 import { getFarmers } from "../../services/api/farmer/useCases/getFarmers"
 import { formatBrazilianEIN, formatBrazilianSSN } from "../../shared/helpers/format/document"
 import { ModalFormFarmer } from "./components/ModalFormFormer/ModalFormFarmer"
-import { ICreateFarmerRequest } from "../../services/api/farmer/protocols/createFarmer"
 import { ToastContainer, toast } from 'react-toastify';
 import { createFarmer } from "../../services/api/farmer/useCases/createFarmer"
 import { Loading } from "../../shared/components/Loading/Loading"
 import { CreateBrainAgricultureContext } from "../../context/contex"
 import { getDashboardValues } from "../../services/api/farmer/useCases/getDashboardValues"
+import { getFarmerById } from "../../services/api/farmer/useCases/getFarmerById"
+import { updateFarmer } from "../../services/api/farmer/useCases/updateFarmer"
 
 export const Farmer = (): React.ReactElement => {
   const [data, setData] = useState<IFarmer[]>()
-  const [openModal, setIsOpenModal] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const { setDashboardValues } = useContext(CreateBrainAgricultureContext)
+  const [id, setId] = useState('');
+  const { setDashboardValues } = useContext(CreateBrainAgricultureContext);
+  const [farmer, setFarmer] = useState<IFarmer>({} as IFarmer);
 
   useEffect(() => {
     handleGetFarmers()
@@ -26,29 +29,45 @@ export const Farmer = (): React.ReactElement => {
       const response = await getFarmers();
       setData(response.farmers);
       setLoading(false);
-      setIsOpenModal(false);
+      setOpenModal(false);
     } catch (error) {
       toast.error('Erro ao listar produtores')
     }
   }
 
-  const handleSubmit = async (formData: ICreateFarmerRequest) => {
+  const handleSubmit = async (formData: IFarmer) => {
     try {
       setLoading(true);
-      const response = await createFarmer(formData);
-      console.log(response.message)
-      setLoading(false);
+      const response = id === '' ? await createFarmer(formData) : await updateFarmer({ id, farmerData: formData });
       toast.success(response.message);
-      setIsOpenModal(false)
       await handleGetFarmers()
       const data = await getDashboardValues();
+      onClose();
       setDashboardValues && setDashboardValues(data);
     } catch (error) {
       toast.error('Erro ao adicionar produtor')
-      setLoading(false)
-      setIsOpenModal(false)
+      onClose()
     }
   };
+
+  const handleGetFarmer = async (id: string) => {
+    try {
+      setLoading(true);
+      const response = await getFarmerById({ id })
+      setFarmer(response)
+      setLoading(false);
+    } catch (error) {
+      toast.error('Ocorreu um erro ao carregar os dados do produtor')
+      onClose()
+    }
+  }
+
+
+  const onClose = () => {
+    setOpenModal(false);
+    setLoading(false);
+    setId('');
+  }
 
   return <>
     <div className="bg-white rounded-sm p-4 flex-1 border border-gray-200 flex items-center">
@@ -56,7 +75,7 @@ export const Farmer = (): React.ReactElement => {
         <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1">
           <div className="flex justify-between items-center">
             <strong className="text-gray-700 text-lg">Produtores</strong>
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={() => setIsOpenModal(true)}>
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={() => setOpenModal(true)}>
               Adicionar
             </button>
           </div>
@@ -93,7 +112,11 @@ export const Farmer = (): React.ReactElement => {
                     })}
                     </td>
                     <td>
-                      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
+                      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={async () => {
+                        setId(item.id);
+                        await handleGetFarmer(item.id);
+                        setOpenModal(true);
+                      }}>
                         Editar
                       </button>
                       <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
@@ -110,9 +133,11 @@ export const Farmer = (): React.ReactElement => {
     </div>
     <ModalFormFarmer
       isOpen={openModal}
-      onClose={() => setIsOpenModal(false)}
+      onClose={onClose}
       action={handleSubmit}
       loading={loading}
+      id={id}
+      farmer={farmer}
     />
     <ToastContainer />
     {loading && <Loading />}
